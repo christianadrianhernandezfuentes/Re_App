@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* El fondo oscuro de Resident Evil */
+body {
+  background-color: #111;
+  color: #fff;
+}
