@@ -3,8 +3,6 @@ const cors = require('cors');
 const { Pool } = require('pg');
 
 const app = express();
-
-// Permisos de seguridad para recibir datos
 app.use(cors());
 app.use(express.json());
 
@@ -135,9 +133,7 @@ app.listen(5000, () => {
   console.log('Servidor de Umbrella Corporation activo en el puerto 5000 🧟‍♂️');
 });
 
-// ==================
 // Login y guarda los datos a la bd
-// ==================
 app.post('/api/login', async (req, res) => {
   try {
     const { usuario, password } = req.body;
@@ -158,9 +154,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// ========
 // Registro
-// ========
 app.post('/api/registro', async (req, res) => {
   try {
     const { usuario, password } = req.body;
