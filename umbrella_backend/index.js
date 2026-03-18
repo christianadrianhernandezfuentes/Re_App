@@ -7,12 +7,19 @@ app.use(cors());
 app.use(express.json());
 
 // Conexión a tu Base de Datos PostgreSQL
-const pool = new Pool({
+/*const pool = new Pool({
   user: 'postgres',  
   host: 'localhost',
   database: 'umbrella_corp',
   password: 'chris123',
   port: 5432,
+});*/
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 //Baul de Armas
