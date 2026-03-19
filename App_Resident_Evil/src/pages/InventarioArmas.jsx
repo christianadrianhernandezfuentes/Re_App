@@ -21,7 +21,7 @@ const InventarioArmas = () => {
   // Obtener armas get
   const obtenerArmas = async () => {
     try {
-      const respuesta = await fetch('https://re-app-wi6s.onrender.com/api/armas');
+      const respuesta = await fetch('https://umbrella-1lej.onrender.com/api/armas');
       const datos = await respuesta.json();
       setInventario(datos); // Llenamos la tabla con los datos reales
     } catch (error) {
@@ -55,14 +55,14 @@ const InventarioArmas = () => {
     try {
       if (armaEditando) {
         // Actualizar put
-        await fetch(`https://re-app-wi6s.onrender.com/api/armas/${armaEditando}`, {
+        await fetch(`https://umbrella-1lej.onrender.com/api/armas/${armaEditando}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nombre: formNombre, detalle: formDetalle })
         });
       } else {
         // Crear post
-        await fetch('https://re-app-wi6s.onrender.com/api/armas', {
+        await fetch('https://umbrella-1lej.onrender.com/api/armas', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nombre: formNombre, detalle: formDetalle })
@@ -81,7 +81,7 @@ const InventarioArmas = () => {
   const eliminarArma = async (id) => {
     if (window.confirm("¿Seguro que deseas tirar esta arma?")) {
       try {
-        await fetch(`https://re-app-wi6s.onrender.com/api/armas/${id}`, {
+        await fetch(`https://umbrella-1lej.onrender.com/api/armas/${id}`, {
           method: 'DELETE'
         });
         obtenerArmas(); // Recargamos la tabla

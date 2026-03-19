@@ -22,7 +22,7 @@ const InventarioConsumibles = () => {
   // Obtener consumibles get
   const obtenerConsumibles = async () => {
     try {
-      const respuesta = await fetch('https://re-app-wi6s.onrender.com/api/consumibles');
+      const respuesta = await fetch('https://umbrella-1lej.onrender.com/api/consumibles');
       const datos = await respuesta.json();
       setInventario(datos); 
     } catch (error) {
@@ -55,14 +55,14 @@ const InventarioConsumibles = () => {
     try {
       if (itemEditando) {
         // Actualizar put
-        await fetch(`https://re-app-wi6s.onrender.com/api/consumibles/${itemEditando}`, {
+        await fetch(`https://umbrella-1lej.onrender.com/api/consumibles/${itemEditando}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nombre: formNombre, detalle: formDetalle })
         });
       } else {
         // Crear post
-        await fetch('https://re-app-wi6s.onrender.com/api/consumibles', {
+        await fetch('https://umbrella-1lej.onrender.com/api/consumibles', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nombre: formNombre, detalle: formDetalle })
@@ -81,7 +81,7 @@ const InventarioConsumibles = () => {
   const eliminarItem = async (id) => {
     if (window.confirm("¿Seguro que deseas descartar este objeto?")) {
       try {
-        await fetch(`https://re-app-wi6s.onrender.com/api/consumibles/${id}`, {
+        await fetch(`https://umbrella-1lej.onrender.com/api/consumibles/${id}`, {
           method: 'DELETE'
         });
         obtenerConsumibles(); 

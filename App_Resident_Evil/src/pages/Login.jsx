@@ -19,8 +19,8 @@ const Login = () => {
 
 
     const url = esRegistro 
-      ? 'https://re-app-wi6s.onrender.com/api/registro' 
-      : 'https://re-app-wi6s.onrender.com/api/login';
+      ? 'https://umbrella-1lej.onrender.com/api/registro' 
+      : 'https://umbrella-1lej.onrender.com/api/login';
 
     try {
       const respuesta = await fetch(url, {
