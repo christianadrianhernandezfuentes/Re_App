@@ -55,7 +55,7 @@ const Login = () => {
       style={{ backgroundImage: "url('/leon.jpg')" }}
     >
       <img 
-        src="/umbrella.gif" 
+        src="/movimiento.gif" 
         alt="Logo Umbrella" 
         className="fixed top-5 left-5 w-24 z-50 rounded-full shadow-[0_0_15px_rgba(255,0,0,0.5)]" 
       />
