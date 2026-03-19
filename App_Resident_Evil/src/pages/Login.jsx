@@ -6,7 +6,10 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [mensajeExito, setMensajeExito] = useState('');
+  
+  // Controla si estamos registrando o iniciando sesión
   const [esRegistro, setEsRegistro] = useState(false); 
+  
   const navigate = useNavigate();
 
   const manejarSubmit = async (e) => {
@@ -15,7 +18,9 @@ const Login = () => {
     setMensajeExito('');
 
 
-    const url = esRegistro ? 'http://localhost:5000/api/registro' : 'http://localhost:5000/api/login';
+    const url = esRegistro 
+      ? 'https://re-app-wi6s.onrender.com/api/registro' 
+      : 'https://re-app-wi6s.onrender.com/api/login';
 
     try {
       const respuesta = await fetch(url, {
@@ -28,22 +33,19 @@ const Login = () => {
 
       if (datos.success) {
         if (esRegistro) {
-          // Si nos registramos con éxito, mostrara un mensaje y volvemos a la pantalla de Login
           setMensajeExito('¡Credencial creada! Ahora puedes iniciar sesión.');
           setEsRegistro(false); 
           setUsuario('');
           setPassword('');
         } else {
-          // Si iniciamos sesión con éxito, entramos al baúl
           navigate('/armas'); 
         }
       } else {
-        // Se mostrara el error ya sea por ejemplo, "Credenciales incorrectas" o "Usuario ya en uso")
         setError(datos.mensaje || 'Error en la solicitud 🩸');
       }
     } catch (err) {
       console.error("Error al conectar al servidor:", err);
-      setError('Error de conexión con la base de datos.');
+      setError('Error de conexión con la base de datos. Verifica que el backend esté encendido.');
     }
   };
 
@@ -53,7 +55,7 @@ const Login = () => {
       style={{ backgroundImage: "url('/leon.jpg')" }}
     >
       <img 
-        src="/movimiento.gif" 
+        src="/umbrella.gif" 
         alt="Logo Umbrella" 
         className="fixed top-5 left-5 w-24 z-50 rounded-full shadow-[0_0_15px_rgba(255,0,0,0.5)]" 
       />
@@ -64,7 +66,6 @@ const Login = () => {
           {esRegistro ? 'Nuevo Ingreso' : 'Terminal Umbrella'}
         </h1>
 
-        {/* Mensajes de error o éxito */}
         {error && <div className="bg-red-900/50 border border-red-500 text-red-200 p-3 rounded mb-4">{error}</div>}
         {mensajeExito && <div className="bg-green-900/50 border border-green-500 text-green-200 p-3 rounded mb-4">{mensajeExito}</div>}
 
@@ -94,7 +95,6 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Boton para cambiar login y registro*/}
         <button 
           type="button"
           onClick={() => {
