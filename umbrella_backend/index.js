@@ -9,15 +9,6 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Conexión a tu Base de Datos PostgreSQL
-/*const pool = new Pool({
-  user: 'postgres',  
-  host: 'localhost',
-  database: 'umbrella_corp',
-  password: 'chris123',
-  port: 5432,
-});*/
-
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -25,11 +16,20 @@ const pool = new Pool({
   }
 });
 
-//Baul de Armas
+// Baul Armas
+// <<<<<<>>>>>>>>>>
 
+// Leer Armas (Filtradas por usuario)
 app.get('/api/armas', async (req, res) => {
   try {
-    const todasLasArmas = await pool.query('SELECT * FROM armas ORDER BY id ASC');
+    const { usuario_id } = req.query; 
+    
+    if (!usuario_id) return res.json([]);
+
+    const todasLasArmas = await pool.query(
+      'SELECT * FROM armas WHERE usuario_id = $1 ORDER BY id ASC',
+      [usuario_id]
+    );
     res.json(todasLasArmas.rows);
   } catch (err) {
     console.error(err.message);
@@ -37,13 +37,13 @@ app.get('/api/armas', async (req, res) => {
   }
 });
 
-// 2. Crear arma post
+// Crear arma
 app.post('/api/armas', async (req, res) => {
   try {
-    const { nombre, detalle } = req.body;
+    const { nombre, detalle, usuario_id } = req.body; 
     const nuevaArma = await pool.query(
-      'INSERT INTO armas (nombre, detalle) VALUES ($1, $2) RETURNING *',
-      [nombre, detalle]
+      'INSERT INTO armas (nombre, detalle, usuario_id) VALUES ($1, $2, $3) RETURNING *',
+      [nombre, detalle, usuario_id]
     );
     res.json(nuevaArma.rows[0]);
   } catch (err) {
@@ -52,10 +52,11 @@ app.post('/api/armas', async (req, res) => {
   }
 });
 
+// Actualizar arma
 app.put('/api/armas/:id', async (req, res) => {
   try {
-    const { id } = req.params; // Sacamos el ID de la URL
-    const { nombre, detalle } = req.body; // Sacamos los nuevos datos del body
+    const { id } = req.params; 
+    const { nombre, detalle } = req.body; 
     
     const armaActualizada = await pool.query(
       'UPDATE armas SET nombre = $1, detalle = $2 WHERE id = $3 RETURNING *',
@@ -68,7 +69,7 @@ app.put('/api/armas/:id', async (req, res) => {
   }
 });
 
-// 4. Eliminar un arma Delete
+// Eliminar arma 
 app.delete('/api/armas/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -81,12 +82,19 @@ app.delete('/api/armas/:id', async (req, res) => {
   }
 });
 
-//Baul de Consumibles 
+// Consumibles  baul
+// <<<<>>>>
 
-// 1. Leer Get
 app.get('/api/consumibles', async (req, res) => {
   try {
-    const todosLosConsumibles = await pool.query('SELECT * FROM consumibles ORDER BY id ASC');
+    const { usuario_id } = req.query;
+    
+    if (!usuario_id) return res.json([]);
+
+    const todosLosConsumibles = await pool.query(
+      'SELECT * FROM consumibles WHERE usuario_id = $1 ORDER BY id ASC',
+      [usuario_id]
+    );
     res.json(todosLosConsumibles.rows);
   } catch (err) {
     console.error(err.message);
@@ -94,13 +102,13 @@ app.get('/api/consumibles', async (req, res) => {
   }
 });
 
-// 2. Crear post
+// 2. Crear consumible
 app.post('/api/consumibles', async (req, res) => {
   try {
-    const { nombre, detalle } = req.body;
+    const { nombre, detalle, usuario_id } = req.body;
     const nuevoConsumible = await pool.query(
-      'INSERT INTO consumibles (nombre, detalle) VALUES ($1, $2) RETURNING *',
-      [nombre, detalle]
+      'INSERT INTO consumibles (nombre, detalle, usuario_id) VALUES ($1, $2, $3) RETURNING *',
+      [nombre, detalle, usuario_id]
     );
     res.json(nuevoConsumible.rows[0]);
   } catch (err) {
@@ -109,7 +117,7 @@ app.post('/api/consumibles', async (req, res) => {
   }
 });
 
-// 3. Actualizar put
+// 3. Actualizar consumible
 app.put('/api/consumibles/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -126,7 +134,7 @@ app.put('/api/consumibles/:id', async (req, res) => {
   }
 });
 
-// 4. Eliminar delete
+// 4. Eliminar consumible
 app.delete('/api/consumibles/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -139,11 +147,9 @@ app.delete('/api/consumibles/:id', async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log('Servidor de Umbrella Corporation activo en el puerto 5000 🧟‍♂️');
-});
 
-// Login y guarda los datos a la bd
+
+// Login
 app.post('/api/login', async (req, res) => {
   try {
     const { usuario, password } = req.body;
@@ -154,7 +160,11 @@ app.post('/api/login', async (req, res) => {
     );
 
     if (usuarioEncontrado.rows.length > 0) {
-      res.json({ success: true, mensaje: "Acceso concedido a la red de Umbrella" });
+      res.json({ 
+        success: true, 
+        mensaje: "Acceso concedido a la red de Umbrella",
+        usuario_id: usuarioEncontrado.rows[0].id 
+      });
     } else {
       res.status(401).json({ success: false, mensaje: "Credenciales incorrectas" });
     }
@@ -185,6 +195,7 @@ app.post('/api/registro', async (req, res) => {
   }
 });
 
+
 app.use(express.static(path.join(__dirname, 'dist')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
@@ -192,5 +203,5 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.pragma(`Servidor de Umbrella Corp corriendo en el puerto ${PORT}`);
+  console.log(`Servidor de Umbrella Corp corriendo en el puerto ${PORT}`);
 });
