@@ -7,7 +7,6 @@ const Login = () => {
   const [error, setError] = useState('');
   const [mensajeExito, setMensajeExito] = useState('');
   
-  // Controla si estamos registrando o iniciando sesión
   const [esRegistro, setEsRegistro] = useState(false); 
   
   const navigate = useNavigate();
@@ -16,7 +15,6 @@ const Login = () => {
     e.preventDefault();
     setError('');
     setMensajeExito('');
-
 
     const url = esRegistro 
       ? 'https://umbrella-1lej.onrender.com/api/registro' 
@@ -38,6 +36,8 @@ const Login = () => {
           setUsuario('');
           setPassword('');
         } else {
+          // 🚨 MAGIA AQUÍ: Guardamos el Gafete (usuario_id) en el navegador
+          localStorage.setItem('usuario_id', datos.usuario_id);
           navigate('/armas'); 
         }
       } else {
@@ -45,7 +45,7 @@ const Login = () => {
       }
     } catch (err) {
       console.error("Error al conectar al servidor:", err);
-      setError('Error de conexión con la base de datos. Verifica que el backend esté encendido.');
+      setError('Error de conexión con la base de datos.');
     }
   };
 

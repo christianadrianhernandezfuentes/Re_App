@@ -14,15 +14,18 @@ const InventarioConsumibles = () => {
   const [formNombre, setFormNombre] = useState('');
   const [formDetalle, setFormDetalle] = useState('');
 
-  const cerrarSesion = () => navigate('/');
+  const usuario_id = localStorage.getItem('usuario_id');
 
-  // Base de datos
-  // <<<<>>>>
+  const cerrarSesion = () => {
+    localStorage.removeItem('usuario_id');
+    navigate('/');
+  };
 
-  // Obtener consumibles get
   const obtenerConsumibles = async () => {
+    if (!usuario_id) return navigate('/'); 
+
     try {
-      const respuesta = await fetch('https://umbrella-1lej.onrender.com/api/consumibles');
+      const respuesta = await fetch(`https://umbrella-1lej.onrender.com/api/consumibles?usuario_id=${usuario_id}`);
       const datos = await respuesta.json();
       setInventario(datos); 
     } catch (error) {
@@ -61,11 +64,10 @@ const InventarioConsumibles = () => {
           body: JSON.stringify({ nombre: formNombre, detalle: formDetalle })
         });
       } else {
-        // Crear post
         await fetch('https://umbrella-1lej.onrender.com/api/consumibles', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nombre: formNombre, detalle: formDetalle })
+          body: JSON.stringify({ nombre: formNombre, detalle: formDetalle, usuario_id })
         });
       }
       
@@ -91,16 +93,11 @@ const InventarioConsumibles = () => {
     }
   };
 
-  
-  // ul visual bonito
-  //<<<>>>>
   return (
-  
      <div 
       className="min-h-screen p-10 flex flex-col items-center bg-cover bg-center bg-fixed"
       style={{ backgroundImage: "url('/leon.jpg')" }}
     >
-
       <img 
         src="/movimiento.gif" 
         alt="Logo Umbrella" 

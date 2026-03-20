@@ -15,26 +15,30 @@ const InventarioArmas = () => {
   const [formNombre, setFormNombre] = useState('');
   const [formDetalle, setFormDetalle] = useState('');
 
-  const cerrarSesion = () => navigate('/');
+  const usuario_id = localStorage.getItem('usuario_id');
 
-  // base de datos
+  const cerrarSesion = () => {
+    localStorage.removeItem('usuario_id');
+    navigate('/');
+  };
+
   // Obtener armas get
   const obtenerArmas = async () => {
+    if (!usuario_id) return navigate('/'); 
+
     try {
-      const respuesta = await fetch('https://umbrella-1lej.onrender.com/api/armas');
+      const respuesta = await fetch(`https://umbrella-1lej.onrender.com/api/armas?usuario_id=${usuario_id}`);
       const datos = await respuesta.json();
-      setInventario(datos); // Llenamos la tabla con los datos reales
+      setInventario(datos); 
     } catch (error) {
       console.error("Error al conectar con el servidor:", error);
     }
   };
 
-
   useEffect(() => {
     obtenerArmas();
   }, []);
 
-  // Botones para abrir el Modal
   const abrirModalCrear = () => {
     setArmaEditando(null);
     setFormNombre('');
@@ -61,11 +65,10 @@ const InventarioArmas = () => {
           body: JSON.stringify({ nombre: formNombre, detalle: formDetalle })
         });
       } else {
-        // Crear post
         await fetch('https://umbrella-1lej.onrender.com/api/armas', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nombre: formNombre, detalle: formDetalle })
+          body: JSON.stringify({ nombre: formNombre, detalle: formDetalle, usuario_id })
         });
       }
       
@@ -84,22 +87,18 @@ const InventarioArmas = () => {
         await fetch(`https://umbrella-1lej.onrender.com/api/armas/${id}`, {
           method: 'DELETE'
         });
-        obtenerArmas(); // Recargamos la tabla
+        obtenerArmas(); 
       } catch (error) {
         console.error("Error al eliminar:", error);
       }
     }
   };
 
-  // 
-  // ul visual bonito 
-  // 
   return (
    <div 
       className="min-h-screen p-10 flex flex-col items-center bg-cover bg-center bg-fixed"
       style={{ backgroundImage: "url('/leon.jpg')" }}
     >
-
       <img 
         src="/movimiento.gif" 
         alt="Logo Umbrella" 
