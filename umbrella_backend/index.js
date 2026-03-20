@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const path = require('path');
 
 const app = express();
 app.use(cors({
@@ -182,4 +183,14 @@ app.post('/api/registro', async (req, res) => {
       res.status(500).send('Error en el servidor al registrar');
     }
   }
+});
+
+app.use(express.static(path.join(__dirname, 'dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.pragma(`Servidor de Umbrella Corp corriendo en el puerto ${PORT}`);
 });
