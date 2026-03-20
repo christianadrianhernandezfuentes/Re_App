@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
-const path = require('path');
 
 const app = express();
 app.use(cors({
@@ -9,6 +8,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Conexión a la Base de Datos
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -16,8 +16,8 @@ const pool = new Pool({
   }
 });
 
-// Baul Armas
-// <<<<<<>>>>>>>>>>
+// BAÚL DE ARMAS
+//<<<<<<<<>>>>>>>>
 
 // Leer Armas (Filtradas por usuario)
 app.get('/api/armas', async (req, res) => {
@@ -73,7 +73,6 @@ app.put('/api/armas/:id', async (req, res) => {
 app.delete('/api/armas/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    
     await pool.query('DELETE FROM armas WHERE id = $1', [id]);
     res.json({ mensaje: "Arma destruida exitosamente" });
   } catch (err) {
@@ -82,9 +81,10 @@ app.delete('/api/armas/:id', async (req, res) => {
   }
 });
 
-// Consumibles  baul
-// <<<<>>>>
+// BAÚL DE CONSUMIBLES
+// <<<<<<<<>>>>>>>>>
 
+// Leer consumibles
 app.get('/api/consumibles', async (req, res) => {
   try {
     const { usuario_id } = req.query;
@@ -102,7 +102,7 @@ app.get('/api/consumibles', async (req, res) => {
   }
 });
 
-// 2. Crear consumible
+// Crear consumible
 app.post('/api/consumibles', async (req, res) => {
   try {
     const { nombre, detalle, usuario_id } = req.body;
@@ -117,7 +117,7 @@ app.post('/api/consumibles', async (req, res) => {
   }
 });
 
-// 3. Actualizar consumible
+// Actualizar consumible
 app.put('/api/consumibles/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -134,11 +134,10 @@ app.put('/api/consumibles/:id', async (req, res) => {
   }
 });
 
-// 4. Eliminar consumible
+// Eliminar consumible
 app.delete('/api/consumibles/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    
     await pool.query('DELETE FROM consumibles WHERE id = $1', [id]);
     res.json({ mensaje: "Objeto descartado exitosamente" });
   } catch (err) {
@@ -195,11 +194,6 @@ app.post('/api/registro', async (req, res) => {
   }
 });
 
-
-app.use(express.static(path.join(__dirname, 'dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
