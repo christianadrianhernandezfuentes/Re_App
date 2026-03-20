@@ -13,11 +13,11 @@ const Tabla = ({ items, onEditar, onEliminar }) => {
           </tr>
         </thead>
         <tbody className="bg-gray-900">
-          {/* MAGIA AQUÍ: Agregamos "index" para saber la posición en la lista */}
+          {/* Lista*/}
           {items.map((item, index) => (
             <tr key={item.id} className="border-b border-gray-800 hover:bg-gray-800 transition-colors">
               
-              {/* MAGIA AQUÍ: Mostramos index + 1 (1, 2, 3...) en lugar del item.id real */}
+              {/* Identificador*/}
               <td className="p-4 text-gray-500">#{index + 1}</td>
               
               <td className="p-4 font-bold text-white">{item.nombre}</td>
@@ -30,7 +30,7 @@ const Tabla = ({ items, onEditar, onEliminar }) => {
                 >
                   ¿Modificar?
                 </button>
-                {/* Botón para eliminar (Este SÍ necesita el ID real para saber cuál borrar en la BD) */}
+                {/* Botón para eliminar*/}
                 <button 
                   onClick={() => onEliminar(item.id)}
                   className="bg-red-900 hover:bg-red-700 text-white px-3 py-1 rounded shadow transition"
